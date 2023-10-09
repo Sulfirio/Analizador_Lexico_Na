@@ -173,7 +173,7 @@ def analizador_lexico(input_string):
             else:
                 token_type = [k for k, v in token_dict.items() if v == "!"][0]
                 tokens.append([token_type, "!"])
-                  # Corrección: incrementar pos aquí también
+                # Corrección: incrementar pos aquí también
             state = S0
 
         if state == S13:
