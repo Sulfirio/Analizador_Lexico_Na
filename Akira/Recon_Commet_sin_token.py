@@ -1,8 +1,8 @@
 class Token:
-    def __init__(self, type, value):
-        self.type = type
+    def __init__(self, token_type, value, literal=None):
+        self.type = token_type
         self.value = value
-        self.literal = None
+        self.literal = literal
 
 
 # Diccionario de tokens
