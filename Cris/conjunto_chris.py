@@ -264,6 +264,7 @@ def recognize_tokens(input_string):
         if state == S25:
             if char in char_to_token:
                 tokens.append(Token(char_to_token[char], char))
+                state = S0
             pos += 1
 
         if state == S26:
