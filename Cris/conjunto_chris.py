@@ -116,6 +116,9 @@ def recognize_tokens(input_string):
             if char == '/':
                 state = S26
                 comment_start = pos
+            if char == '"':
+                state = S24
+                current_string = ""
 
             pos += 1
 
@@ -249,6 +252,14 @@ def recognize_tokens(input_string):
         if state == S23:
             tokens.append(Token("NUMBER", token, float(token)))
             state = 0
+            
+        if state == S24:
+            if char == '"':
+                tokens.append(Token("STRING", current_string, current_string))
+                state = S0
+            else:
+                current_string += char
+            pos += 1
 
         if state == S26:
             if char == '/':
