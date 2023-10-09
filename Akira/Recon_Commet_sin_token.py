@@ -121,11 +121,12 @@ def recognize_comments_v7(input_string, token_dict):
 
 # Ejemplo de uso
 test_string_v7 = """
-int x = 10 / 5; // This is a single-line comment
-a<=b!=c==d>e>=f<g!h=1
-/* This is a 
-multi-line comment */
-int y = 20;
+fun sumar(variable1, variable2){
+    return variabl1 + variable2;
+}
+
+/* Esto es un comentario
+multilinea*/if(2*2){}
 """
 
 comments, tokens = recognize_comments_v7(test_string_v7, token_dict)

@@ -127,8 +127,7 @@ def recognize_relational_operators_v8(input_string):
 
 # Ejecutando el código con la cadena de prueba y verificando los tokens reconocidos
 test_string = """
-*a<=b!= c==d >e>=f<g!h=1
-! > =
+var a = 5;
 """
 tokens = recognize_relational_operators_v8(test_string)
 
