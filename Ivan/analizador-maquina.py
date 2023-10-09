@@ -112,6 +112,7 @@ with open(archivo_entrada, 'r') as file:
                         current_token += char
                     else:
                         tokens.append(current_token)
+                        identificadores['id'] = current_token
                         current_token = ""
                         state = "inicio"
                         if char == '"':
@@ -168,8 +169,7 @@ with open(archivo_entrada, 'r') as file:
             else:
             # Token desconocido
                 print(f"Error: Token desconocido '{token}'")
+                print(identificadores)
                 sys.exit(1)
 
         print("................................................")
-            
-
