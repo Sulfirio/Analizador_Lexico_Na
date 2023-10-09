@@ -20,6 +20,9 @@ with open(archivo_entrada, 'r') as file:
                     'o' : 'id','p' : 'id','q' : 'id','r' : 'id','s' : 'id','t' : 'id','u' : 'id','v' : 'id','w' : 'id','x' : 'id','y' : 'id','z' : 'id',
                     'A' : 'id','B' : 'id','C' : 'id','D' : 'id','E' : 'id','F' : 'id','G' : 'id','H' : 'id','I' : 'id','J' : 'id','K' : 'id','L' : 'id','M' : 'id','N' : 'id',
                     'O' : 'id','P' : 'id','Q' : 'id','R' : 'id','S' : 'id','T' : 'id','U' : 'id','V' : 'id','W' : 'id','X' : 'id','Y' : 'id','Z' : 'id'}
+    
+    id = []
+    
     identificadores_key = identificadores.keys()
 
     palabras_reservadas = {'and' : 'AND', 'else' : 'ELSE', 'false' : 'FALSE', 'for' : 'FOR',
@@ -78,8 +81,26 @@ with open(archivo_entrada, 'r') as file:
                     elif char in "<>=!":
                         current_token += char
                         state = "operador"
+                    elif char.isalpha:
+                        current_token += char
+                        state = "ID"
                     else:
                         tokens.append(char)
+                        
+                        
+                elif state == "ID":
+                    if char.isalpha() or char.isnumeric():                
+                        state = "ID"
+                        current_token += char
+                        
+                    else:
+                        tokens.append(current_token)
+                        id.append(current_token)
+                        current_token = ""
+                        state = "inicio"
+                        print("Estado de token es:",current_token)
+                        
+                        
                 elif state == "entre_comillas":
                     current_token += char
                     if char == '"':
@@ -140,6 +161,10 @@ with open(archivo_entrada, 'r') as file:
             #Palabras Clave   
             elif token in palabras_reservadas_key:
                 print(palabras_reservadas[token])
+            elif token == " ":
+                a = 1
+            elif token in id:
+                print(id[token])
             else:
             # Token desconocido
                 print(f"Error: Token desconocido '{token}'")
