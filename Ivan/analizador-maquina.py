@@ -11,7 +11,7 @@ if len(sys.argv) != 2:
 
 archivo_entrada = sys.argv[1]
 
-# Abrir el archivo sin manejo de excepciones
+# Abrir el archivo 
 with open(archivo_entrada, 'r') as file:
 
 
