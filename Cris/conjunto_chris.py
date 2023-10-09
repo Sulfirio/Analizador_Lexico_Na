@@ -43,6 +43,20 @@ token_dict = {
     "WHILE": "while",
     "EOF": "EOF"
 }
+token_dict2 = {
+        "LEFT_PAREN": "(",
+        "RIGHT_PAREN": ")",
+        "LEFT_BRACE": "{",
+        "RIGHT_BRACE": "}",
+        "COMMA": ",",
+        "DOT": ".",
+        "MINUS": "-",
+        "PLUS": "+",
+        "SEMICOLON": ";",
+        "SLASH": "/",
+        "STAR": "*",
+        # ... Resto de tus tokens
+    }
 
 keywords = [
     "AND", "ELSE", "FALSE", "FUN", "FOR", "IF", "NULL", "OR",
@@ -51,6 +65,8 @@ keywords = [
 
 def recognize_tokens(input_string):
     tokens = []
+    
+    char_to_token = {v: k for k, v in token_dict2.items()}
     S0 = 0
     S1 = 1
     S2 = 2
@@ -118,7 +134,8 @@ def recognize_tokens(input_string):
                 comment_start = pos
             if char == '"':
                 state = S24
-
+            if char in char_to_token:
+                tokens.append(Token(char_to_token[char], char))
             pos += 1
 
         if state == S1:
