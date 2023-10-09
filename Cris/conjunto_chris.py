@@ -59,11 +59,11 @@ def recognize_tokens(input_string):
             status = 0
             for i in range (len(keywords)):
                 if token.lower == keywords[i].lower():
-                    tokens.append([keywords[i],token.lower,token.lower])
+                    tokens.append(Token(keywords[i],token.lower,token.lower))
                     status = 1
                     i = (len(keywords))
             if status == 0:
-                tokens.append(["IDENTIFIER", token,token])                
+                tokens.append(Token("IDENTIFIER", token,token))                
                     
             
         if state == S15:
@@ -124,16 +124,16 @@ def recognize_tokens(input_string):
                 
             pos+=1
         if state == S21:
-            tokens.append(["NUMBER", token,int(token)])
+            tokens.append(Token("NUMBER", token,int(token)))
             state == 0
                 
                 
         if state == S22:
-            tokens.append(["NUMBER", token,float(token)])
+            tokens.append(Token("NUMBER", token,float(token)))
             state == 0
                 
                 
         if state == S23:
-            tokens.append(["NUMBER", token,float(token)])
+            tokens.append(Token("NUMBER", token,float(token)))
             state == 0
         
