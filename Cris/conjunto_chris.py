@@ -118,7 +118,6 @@ def recognize_tokens(input_string):
                 comment_start = pos
             if char == '"':
                 state = S24
-                current_string = ""
 
             pos += 1
 
@@ -255,10 +254,10 @@ def recognize_tokens(input_string):
             
         if state == S24:
             if char == '"':
-                tokens.append(Token("STRING", current_string, current_string))
+                tokens.append(Token("STRING", token, token))
                 state = S0
             else:
-                current_string += char
+                token += char
             pos += 1
 
         if state == S26:
