@@ -46,7 +46,6 @@ keywords = [
 
 def analizador_lexico(input_string):
     tokens = []
-    errors = []
     S0 = 0
     S1 = 1
     S2 = 2
@@ -88,6 +87,8 @@ def analizador_lexico(input_string):
     comments = []
     comment_start = -1
     char_to_token = {v: k for k, v in token_dict.items()}
+    tuo = len(input_string)
+    print(tuo)
     while pos < len(input_string):
         char = input_string[pos]
         if state == S0:
@@ -114,6 +115,8 @@ def analizador_lexico(input_string):
             elif char == '/':
                 state = S26
                 comment_start = pos
+                pos += 1
+                continue
             elif char == '"':
                 state = S24
                 pos += 1
@@ -280,12 +283,15 @@ def analizador_lexico(input_string):
                 state = S27
             else:
                 state = S32
+                continue
             pos += 1
+            continue
 
         if state == S27:
             if char == '*':
                 state = S28
             pos += 1
+            continue
 
         if state == S28:
             if char == '/':
@@ -298,30 +304,45 @@ def analizador_lexico(input_string):
             else:
                 state = S27
             pos += 1
+            continue
 
-        if state == S30:
-            if char == '\n':
+        elif state == S30:
+            if char == '\n' or pos == len(input_string) - 1:
                 state = S0
+                if char != '\n':  # Si el comentario no termina con un salto de línea, incluir el último caracter
+                    pos += 1
                 comments.append(input_string[comment_start:pos])
                 comment_start = -1
             pos += 1
-
+            continue
         if state == S32:
             # Buscar el identificador correspondiente en el diccionario
             token_type = [k for k, v in token_dict.items() if v == "/"][0]
             tokens.append([token_type, "/"])
             state = S0
             comment_start = -1
-    return tokens
+            continue
+    # Manejo del último token, si es que hay uno en construcción
+    if token:
+        if state == S15 or state == S17 or state == S20:
+            tokens.append(["NUMBER", token, float(token)])
+        elif state == S13:
+            tokens.append(["IDENTIFIER", token])
+        else:
+            raise ValueError(f"Token incompleto al final de la cadena: {token}")
+
+    return tokens, comments
 
 
 def analizar_cadena():
     while True:
         try:
             cadena = input()
-            tokens = analizador_lexico(cadena)
+            tokens, comments = analizador_lexico(cadena)
             for token in tokens:
-                print(token)
+                print("Tokens:", token)
+            for token in comments:
+                print("Comentarios:", token)
         except EOFError:
             # Fin de la entrada
             break
@@ -333,8 +354,9 @@ def analizar_archivo(nombre_archivo):
     try:
         with open(nombre_archivo, 'r') as file:
             contenido = file.read()
-            tokens = analizador_lexico(contenido)
+            tokens, comments = analizador_lexico(contenido)
             print("Tokens:", tokens)
+            print("Comentarios:", comments)
     except FileNotFoundError:
         print(f"El archivo '{nombre_archivo}' no se encontró.")
     except Exception as e:
