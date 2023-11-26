@@ -49,7 +49,7 @@ keywords = [
     "PRINT", "RETURN", "TRUE", "VAR", "WHILE"]
 
 
-def recognize_tokens(input_string):
+def analizador_lexico(input_string):
     tokens = []
 
     S0 = 0
@@ -94,8 +94,7 @@ def recognize_tokens(input_string):
     char_to_token = {v: k for k, v in token_dict.items()}
     while pos < len(input_string):
         char = input_string[pos]
-        print(char)
-        print("Status es: ", state)
+        print("Estado: ",state,"|Char: ",char)
         if state == S0:
             token = ""
             if char == '<':
@@ -104,15 +103,16 @@ def recognize_tokens(input_string):
             elif char == '>':
                 state = S2
                 token += char
-            elif char == '=':
+            if char == '=':
                 state = S3
                 token += char
             elif char == '!':
                 state = S4
                 token += char
+            elif char == " ":
+                pos+=1
             elif char.isnumeric():
                 state = S15
-                token += char
             elif char.isalpha():
                 state = S13
             elif char == '/':
@@ -126,44 +126,44 @@ def recognize_tokens(input_string):
         if state == S1:
             if char == '=':
                 token_type = [k for k, v in token_dict.items() if v == "<="][0]
-                tokens.append(Token(token_type, "<="))
+                tokens.append([token_type, "<="])
                 pos += 1
             else:
                 token_type = [k for k, v in token_dict.items() if v == "<"][0]
-                tokens.append(Token(token_type, "<"))
+                tokens.append([token_type, "<"])
                 pos += 1
             state = S0
 
         if state == S2:
             if char == '=':
                 token_type = [k for k, v in token_dict.items() if v == ">="][0]
-                tokens.append(Token(token_type, ">="))
+                tokens.append([token_type, ">="])
                 pos += 1
             else:
                 token_type = [k for k, v in token_dict.items() if v == ">"][0]
-                tokens.append(Token(token_type, ">"))
+                tokens.append([token_type, ">"])
                 pos += 1
             state = S0
 
         if state == S3:
             if char == '=':
                 token_type = [k for k, v in token_dict.items() if v == "=="][0]
-                tokens.append(Token(token_type, "=="))
+                tokens.append([token_type, "=="])
                 pos += 1
             else:
                 token_type = [k for k, v in token_dict.items() if v == "="][0]
-                tokens.append(Token(token_type, "="))
+                tokens.append([token_type, "="])
                 pos += 1
             state = S0
 
         if state == S4:
             if char == '=':
                 token_type = [k for k, v in token_dict.items() if v == "!="][0]
-                tokens.append(Token(token_type, "!="))
+                tokens.append([token_type, "!="])
                 pos += 1
             else:
                 token_type = [k for k, v in token_dict.items() if v == "!"][0]
-                tokens.append(Token(token_type, "!"))
+                tokens.append([token_type, "!"])
                 pos += 1  # Corrección: incrementar pos aquí también
             state = S0
 
@@ -179,46 +179,47 @@ def recognize_tokens(input_string):
             status = 0
             for i in range(len(keywords)):
                 if token == (keywords[i].lower()):
-                    tokens.append(Token(keywords[i], token, token))
-                    print("Se regreso como pal clave", token)
+                    tokens.append([keywords[i], token, token])
                     status = 1
             if status == 0:
-                tokens.append(Token("IDENTIFIER", token))
-                print("Se regreso como ID", token)
-            pos+=1
+                tokens.append(["IDENTIFIER", token])
             state = S0
+            pos-=1
 
         if state == S15:
-            state = S22
             if char.isnumeric():
                 state = S15
                 token += char
+                pos += 1
 
             elif char == '.':
                 state = S16
                 token += char
+                pos += 1
 
             elif char == 'E':
                 state = S18
                 token += char
-            pos += 1
+                pos += 1
+            else:
+                state = S22
 
         elif state == S16:
             if char.isnumeric():
                 state = 17
-                token += char
 
         elif state == S17:
-            state = S23
             if char.isnumeric():
                 state = S17
                 token += char
+                pos += 1
 
             elif char == 'E':
                 state = S18
                 token += char
-
-            pos += 1
+                pos += 1
+            else:
+                state = S23
 
         elif state == S18:
             if char == '+' or char == '-':
@@ -239,27 +240,27 @@ def recognize_tokens(input_string):
             pos += 1
 
         elif state == S20:
-            state = S21
             if char.isnumeric():
                 state = S20
                 token += char
-
-            pos += 1
+                pos += 1
+            else:
+                state = S21
         if state == S21:
-            tokens.append(Token("NUMBER", token, int(token)))
+            tokens.append(["NUMBER", token, float(token)])
             state = 0
 
         if state == S22:
-            tokens.append(Token("NUMBER", token, float(token)))
+            tokens.append(["NUMBER", token, float(token)])
             state = 0
 
         if state == S23:
-            tokens.append(Token("NUMBER", token, float(token)))
+            tokens.append(["NUMBER", token, float(token)])
             state = 0
             
         if state == S24:
             if char == '"':
-                tokens.append(Token("STRING", token, token))
+                tokens.append(["STRING", token, token])
                 state = S0
             else:
                 token += char
@@ -267,8 +268,7 @@ def recognize_tokens(input_string):
 
         if state == S25:
             if char in char_to_token:
-                print("Se testea: ", char)
-                tokens.append(Token(char_to_token[char], char))
+                tokens.append([char_to_token[char], char])
                 state = S0
             pos += 1
 
@@ -308,15 +308,15 @@ def recognize_tokens(input_string):
         if state == S32:
             # Buscar el identificador correspondiente en el diccionario
             token_type = [k for k, v in token_dict.items() if v == "/"][0]
-            tokens.append(Token(token_type, "/"))
+            tokens.append([token_type, "/"])
             state = S0
             comment_start = -1
-    print(tokens)
     return tokens
 
 def main():
-    tokens = recognize_tokens("test=1")
-    #for i in range(len(tokens)):
+    tokens = analizador_lexico('for(var vari=0; ;){print i;if (i>100){return;}}')
+    for token in tokens:
+        print(token)
 
 if __name__ == "__main__":
     main()
