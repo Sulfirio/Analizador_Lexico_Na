@@ -250,8 +250,8 @@ def analizador_ascendente(tokens):
         if S == -1:
             return "Error"
         
-    if(pila[position] == 100):
-        return "Exito"
+        if(pila[position] == 100):
+            return "Exito"
 
     return "Error"
 
