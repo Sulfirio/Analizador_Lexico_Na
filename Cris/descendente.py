@@ -17,18 +17,16 @@ token_dict = {
 
 keywords = [
     "AND", "ELSE", "FALSE", "FUN", "FOR", "IF", "NULL", "OR",
-    "PRINT", "RETURN", "TRUE", "VAR", "WHILE", "SELECT","DISTINCT","FROM"]
+    "PRINT", "RETURN", "TRUE", "VAR", "WHILE", "SELECT", "DISTINCT", "FROM"]
 
 
 def analizador_lexico(input_string):
     tokens = []
-    errors = []
     S0 = 0
     S1 = 1
     S2 = 2
     S3 = 3
     S4 = 4
-    S10 = 10
     SA = -1
     S14 = 14
 
@@ -37,7 +35,6 @@ def analizador_lexico(input_string):
     token = ""
     while pos < len(input_string):
         char = input_string[pos]
-        print("Estado ", state,"con char",char)
         if state == S0:
             token = ""
             if char.isspace():
@@ -64,27 +61,32 @@ def analizador_lexico(input_string):
                 state = S1
                 token += char
             elif char == ".":
+                pos += 1
                 state = 14
                 continue
             elif char == ",":
                 state = 14
+                pos += 1
                 continue
             else:
                 state = 14
             pos += 1
 
         if state == S2:
-            tokens.append("ASTERIC",token)
-            pos+=1
-            
+            tokens.append(("ASTERIC", token))
+            state=0
+            pos += 1
+
         if state == S3:
-            tokens.append("DOT",token)
-            pos+=1
-            
+            tokens.append(("DOT", token))
+            state=0
+            pos += 1
+
         if state == S4:
-            tokens.append("COMMA",token)
-            pos+=1
-            
+            tokens.append(("COMMA", token))
+            state = 0
+            pos += 1
+
         if state == S14:
             status = 0
             for i in range(len(keywords)):
@@ -95,11 +97,11 @@ def analizador_lexico(input_string):
                 tokens.append(["IDENTIFIER", token])
             state = S0
             pos -= 1
-        
+
         if state == SA:
             print("Error.")
             return tokens
-            
+
     return tokens
 
 
@@ -115,20 +117,21 @@ def analizador_descendente(tokens):
     S8 = 8
     S9 = 9
     S10 = 10
-    SFIN = -2
-    
+
     SA = -1
-    
+
     S = 0
-    
+
+
     result = "Exito"
     for token in tokens:
+        print("Estamos en estado:", S)
+        print("Estamos analizando:", token[0])
         if S == S0:
             if token[0] == "SELECT":
                 S = S1
             else:
                 S = SA
-                
         elif S == S1:
             if token[0] == "ASTERIC":
                 S = S2
@@ -136,17 +139,17 @@ def analizador_descendente(tokens):
                 S = S3
             elif token[0] == "IDENTIFIER":
                 S = S4
-            else: 
+            else:
                 S = SA
-                       
-                
+
+
         elif S == S2:
             if token[0] == "FROM":
                 S = S5
             else:
                 S = SA
-            
-            
+
+
         elif S == S3:
             if token[0] == "*":
                 S = S2
@@ -154,8 +157,8 @@ def analizador_descendente(tokens):
                 S = S4
             else:
                 S = SA
-            
-            
+
+
         elif S == S4:
             if token[0] == "COMMA":
                 S = S6
@@ -165,29 +168,29 @@ def analizador_descendente(tokens):
                 S = S5
             else:
                 S = SA
-            
-            
+
+
         elif S == S5:
             if token[0] == "IDENTIFIER":
                 S = S8
             else:
                 S = SA
-            
-            
+
+
         elif S == S6:
             if token[0] == "IDENTIFIER":
                 S = S4
             else:
                 S = SA
-            
-            
+
+
         elif S == S7:
             if token[0] == "IDENTIFIER":
                 S = S4
             else:
                 S = SA
-            
-            
+
+
         elif S == S8:
             if token[0] == "COMMA":
                 S = S9
@@ -195,39 +198,37 @@ def analizador_descendente(tokens):
                 S = S10
             else:
                 S = SA
-            
-            
+
+
         elif S == S9:
             if token[0] == "IDENTIFIER":
                 S = S8
             else:
                 S = SA
-            
-            
+
+
         elif S == S10:
             if token[0] == "IDENTIFIER":
                 S = S8
             else:
                 S = SA
-            
-            
+
         if S == SA:
             return "Error"
-        
-            
-        
+
     return result
 
+
 def main():
-    test_string = """
-        select * from pedro 
-    """
+    test_string = """ select pedro, juan from estudiantes """
     tokens = analizador_lexico(test_string)
     for token in tokens:
         print(token)
+
     analisis = analizador_descendente(tokens)
 
     print(analisis)
+
 
 if __name__ == "__main__":
     main()
