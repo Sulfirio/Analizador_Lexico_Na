@@ -244,7 +244,7 @@ def analizador_ascendente(tokens):
         else:
             return "Error"
             
-            
+        
             
             
         if S == -1:
