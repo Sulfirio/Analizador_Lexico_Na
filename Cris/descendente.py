@@ -149,12 +149,24 @@ def analizador_descendente(tokens):
             
                 
         elif S == S3:
-            return "a"
+            if token[0] == "*":
+                S = S2
+            elif token[0] == "IDENTIFIER":
+                S = S4
+            else:
+                S = SA
             
             
                 
         elif S == S4:
-            return "a"
+            if token[0] == "COMMA":
+                S = S6
+            elif token[0] == "DOT":
+                S = S7
+            elif token[0] == "FROM":
+                S = S5
+            else:
+                S = SA
             
             
             
@@ -169,13 +181,18 @@ def analizador_descendente(tokens):
             
                 
         elif S == S6:
-            return "a"
-            
+            if token[0] == "IDENTIFIER":
+                S = S4
+            else:
+                S = SA
             
             
                 
         elif S == S7:
-            return "a"
+            if token[0] == "IDENTIFIER":
+                S = S4
+            else:
+                S = SA
             
             
             
