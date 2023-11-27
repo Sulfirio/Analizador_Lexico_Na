@@ -35,9 +35,6 @@ def analizador_lexico(input_string):
     state = S0
     pos = 0
     token = ""
-    comments = []
-    comment_start = -1
-    char_to_token = {v: k for k, v in token_dict.items()}
     while pos < len(input_string):
         char = input_string[pos]
         print("Estado ", state,"con char",char)
@@ -47,15 +44,18 @@ def analizador_lexico(input_string):
                 pos += 1
                 continue
             elif char.isalpha():
-                state = S2
+                state = S1
             elif char == '*':
-                state = S3
+                state = S2
+                token = "*"
                 continue
             elif char == '.':
-                state = S14
+                state = S3
+                token = "."
                 continue
             elif char == ',':
-                state = S14
+                token = ","
+                state = S4
                 continue
             else:
                 state = SA
@@ -74,15 +74,15 @@ def analizador_lexico(input_string):
             pos += 1
 
         if state == S2:
-            tokens.append("ASTERIC",char)
+            tokens.append("ASTERIC",token)
             pos+=1
             
         if state == S3:
-            tokens.append("DOT",char)
+            tokens.append("DOT",token)
             pos+=1
             
         if state == S4:
-            tokens.append("COMMA",char)
+            tokens.append("COMMA",token)
             pos+=1
             
         if state == S14:
