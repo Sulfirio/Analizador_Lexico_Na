@@ -261,7 +261,7 @@ def analizar_cadena():
             tokens = analizador_lexico(cadena)
             # for token in tokens:
             #    print("Tokens:", token)
-            analisis = analizador_descendente(tokens)
+            analisis = analizador_ascendente(tokens)
             print(analisis)
         except EOFError:
             # Fin de la entrada
