@@ -1,3 +1,6 @@
+import sys
+
+
 class Token:
     def __init__(self, token_type, value, literal=None):
         self.type = token_type
@@ -74,12 +77,12 @@ def analizador_lexico(input_string):
 
         if state == S2:
             tokens.append(("ASTERIC", token))
-            state=0
+            state = 0
             pos += 1
 
         if state == S3:
             tokens.append(("DOT", token))
-            state=0
+            state = 0
             pos += 1
 
         if state == S4:
@@ -122,11 +125,10 @@ def analizador_descendente(tokens):
 
     S = 0
 
-
     result = "Exito"
     for token in tokens:
-        print("Estamos en estado:", S)
-        print("Estamos analizando:", token[0])
+        # print("Estamos en estado:", S)
+        # print("Estamos analizando:", token[0])
         if S == S0:
             if token[0] == "SELECT":
                 S = S1
@@ -219,15 +221,43 @@ def analizador_descendente(tokens):
     return result
 
 
+def analizar_cadena():
+    while True:
+        try:
+            cadena = input()
+            tokens = analizador_lexico(cadena)
+            # for token in tokens:
+            #    print("Tokens:", token)
+            analisis = analizador_descendente(tokens)
+            print(analisis)
+        except EOFError:
+            # Fin de la entrada
+            break
+        except Exception as e:
+            print("Error:", str(e))
+
+
+def analizar_archivo(nombre_archivo):
+    try:
+        with open(nombre_archivo, 'r') as file:
+            contenido = file.read()
+            tokens = analizador_lexico(contenido)
+            analisis = analizador_descendente(tokens)
+            print(analisis)
+    except FileNotFoundError:
+        print(f"El archivo '{nombre_archivo}' no se encontró.")
+    except Exception as e:
+        print("Error:", str(e))
+
+
 def main():
-    test_string = """ select pedro, juan from estudiantes """
-    tokens = analizador_lexico(test_string)
-    for token in tokens:
-        print(token)
-
-    analisis = analizador_descendente(tokens)
-
-    print(analisis)
+    if len(sys.argv) > 1:
+        # Si se proporcionan argumentos, asumimos que son nombres de archivos para analizar
+        for nombre_archivo in sys.argv[1:]:
+            analizar_archivo(nombre_archivo)
+    else:
+        # Si no se proporcionan argumentos, se inicia el modo interactivo
+        analizar_cadena()
 
 
 if __name__ == "__main__":
