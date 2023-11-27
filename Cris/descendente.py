@@ -56,7 +56,7 @@ def analizador_lexico(input_string):
                 continue
             else:
                 state = SA
-        elif state == S1:
+        if state == S1:
             if char.isalpha() or char.isnumeric():
                 state = S1
                 token += char
@@ -65,26 +65,29 @@ def analizador_lexico(input_string):
                 state = 14
                 continue
             elif char == ",":
-                pos += 1
                 state = 14
+                pos += 1
                 continue
             else:
-                state = S14
+                state = 14
             pos += 1
 
-        elif state == S2:
-            tokens.append("ASTERIC",token)
-            pos+=1
-            
-        elif state == S3:
-            tokens.append("DOT",token)
-            pos+=1
-            
-        elif state == S4:
-            tokens.append("COMMA",token)
-            pos+=1
-            
-        elif state == S14:
+        if state == S2:
+            tokens.append(("ASTERIC", token))
+            state=0
+            pos += 1
+
+        if state == S3:
+            tokens.append(("DOT", token))
+            state=0
+            pos += 1
+
+        if state == S4:
+            tokens.append(("COMMA", token))
+            state = 0
+            pos += 1
+
+        if state == S14:
             status = 0
             for i in range(len(keywords)):
                 if token == (keywords[i].lower()):
@@ -114,16 +117,16 @@ def analizador_descendente(tokens):
     S8 = 8
     S9 = 9
     S10 = 10
-    SFIN = -2
-    
+
     SA = -1
 
     S = 0
 
 
     result = "Exito"
-    
     for token in tokens:
+        print("Estamos en estado:", S)
+        print("Estamos analizando:", token[0])
         if S == S0:
             if token[0] == "SELECT":
                 S = S1
@@ -202,8 +205,8 @@ def analizador_descendente(tokens):
                 S = S8
             else:
                 S = SA
-            
-            
+
+
         elif S == S10:
             if token[0] == "IDENTIFIER":
                 S = S8
