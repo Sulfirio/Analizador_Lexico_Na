@@ -253,6 +253,7 @@ def analizador_ascendente(tokens):
     if(pila[position] == 100):
         return "Exito"
 
+    return "Error"
 
 def analizar_cadena():
     while True:
