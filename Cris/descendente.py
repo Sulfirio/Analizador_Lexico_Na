@@ -211,6 +211,7 @@ def analizador_descendente(tokens):
                 S = SA
             
             
+            
         elif S == S10:
             if token[0] == "IDENTIFIER":
                 S = S8
