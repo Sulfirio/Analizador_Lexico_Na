@@ -61,28 +61,30 @@ def analizador_lexico(input_string):
                 state = S1
                 token += char
             elif char == ".":
+                pos += 1
                 state = 14
                 continue
             elif char == ",":
+                pos += 1
                 state = 14
                 continue
             else:
                 state = S14
             pos += 1
 
-        if state == S2:
+        elif state == S2:
             tokens.append("ASTERIC",token)
             pos+=1
             
-        if state == S3:
+        elif state == S3:
             tokens.append("DOT",token)
             pos+=1
             
-        if state == S4:
+        elif state == S4:
             tokens.append("COMMA",token)
             pos+=1
             
-        if state == S14:
+        elif state == S14:
             status = 0
             for i in range(len(keywords)):
                 if token == (keywords[i].lower()):
