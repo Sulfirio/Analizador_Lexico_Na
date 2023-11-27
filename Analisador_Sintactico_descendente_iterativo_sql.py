@@ -34,8 +34,11 @@ def analizador_lexico(input_string):
     state = S0
     pos = 0
     token = ""
+    size = len(input_string)
     while pos < len(input_string):
         char = input_string[pos]
+        print("Se analiza el character: ", char)
+        print("Estamos en estado:", state)
         if state == S0:
             token = ""
             if char.isspace():
@@ -71,16 +74,19 @@ def analizador_lexico(input_string):
                 continue
             else:
                 state = 14
+            if (pos + 1) >= size:
+                tokens.append(["IDENTIFIER", token])
+                return tokens
             pos += 1
 
         if state == S2:
             tokens.append(("ASTERIC", token))
-            state=0
+            state = 0
             pos += 1
 
         if state == S3:
             tokens.append(("DOT", token))
-            state=0
+            state = 0
             pos += 1
 
         if state == S4:
