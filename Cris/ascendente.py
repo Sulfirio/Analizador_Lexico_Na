@@ -120,7 +120,7 @@ def analizador_ascendente(tokens):
             pila.append(0)
             array += 1
         
-        elif(pila[position] == 0):          #SELECT
+        if(pila[position-1] == 0):          #SELECT
             if tokens[array][0] == "*":
                 pila.append(1)
                 position +=1
@@ -135,13 +135,13 @@ def analizador_ascendente(tokens):
                 array +=1
             
             
-        elif(pila[position] == 1):          #*
+        elif(pila[position-1] == 1):          #*
             if tokens[array][0] == "FROM":
                 pila.append(2)
                 position +=1
                 array +=1
             
-        elif(pila[position] == 2):          #IDENTIFIER D
+        elif(pila[position-1] == 2):          #IDENTIFIER D
             if tokens[array][0] == "DOT":
                 pila.append(12)
                 position +=1
@@ -157,7 +157,7 @@ def analizador_ascendente(tokens):
             else:
                 return "Error"
                 
-        elif(pila[position] == 3):          #FROM
+        elif(pila[position-1] == 3):          #FROM
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.append(4)
@@ -166,7 +166,7 @@ def analizador_ascendente(tokens):
                 return "Error"
                 
                 
-        elif(pila[position] == 4):          #IDENTIFIER T
+        elif(pila[position-1] == 4):          #IDENTIFIER T
             if tokens[array][0] == "DOT":
                 pila.append(22)
                 position +=1
@@ -182,7 +182,7 @@ def analizador_ascendente(tokens):
             else:
                 return "Error"
             
-        elif(pila[position] == 5):          #DISTINCT
+        elif(pila[position-1] == 5):          #DISTINCT
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.append(2)
@@ -195,7 +195,7 @@ def analizador_ascendente(tokens):
                 
                 
             
-        elif(pila[position] == 11):         #COMMA D
+        elif(pila[position-1] == 11):         #COMMA D
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.pop()
@@ -205,7 +205,7 @@ def analizador_ascendente(tokens):
             else:
                 S = -1
             
-        elif(pila[position] == 12):         #DOT D
+        elif(pila[position-1] == 12):         #DOT D
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.pop()
@@ -221,7 +221,7 @@ def analizador_ascendente(tokens):
                 
                 
              
-        elif(pila[position] == 21):         #COMMA T
+        elif(pila[position-1] == 21):         #COMMA T
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.pop()
@@ -231,7 +231,7 @@ def analizador_ascendente(tokens):
             else:
                 S = -1
             
-        elif(pila[position] == 22):         #DOT T
+        elif(pila[position-1] == 22):         #DOT T
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.pop()
@@ -250,7 +250,7 @@ def analizador_ascendente(tokens):
         if S == -1:
             return "Error"
         
-        if(pila[position] == 100):
+        if(pila[position-1] == 100):
             return "Exito"
 
     return "Error"
