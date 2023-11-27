@@ -220,16 +220,14 @@ def analizador_descendente(tokens):
 
 def main():
     test_string = """
-    var nombre = "Nombre";
-    var apellido1 = "Apellido";
-
-    print nombre + " " + apellido1; 
+        select * from pedro 
     """
     tokens = analizador_lexico(test_string)
     for token in tokens:
         print(token)
     analisis = analizador_descendente(tokens)
-    
+
+    print(analisis)
 
 if __name__ == "__main__":
     main()
