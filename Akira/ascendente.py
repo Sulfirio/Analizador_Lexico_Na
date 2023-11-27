@@ -39,8 +39,8 @@ def analizador_lexico(input_string):
     size = len(input_string)
     while pos < len(input_string):
         char = input_string[pos]
-        print("Se analiza el character: ", char)
-        print("Estamos en estado:", state)
+        #print("Se analiza el character: ", char)
+        #print("Estamos en estado:", state)
         if state == S0:
             token = ""
             if char.isspace():
@@ -150,7 +150,7 @@ def analizador_ascendente(tokens):
                 array += 1
 
         elif (pila[position - 1] == 2):  # IDENTIFIER D
-            print("anilizar tokens:", tokens[array][0])
+           #print("anilizar tokens:", tokens[array][0])
 
             if tokens[array][0] == "DOT":
                 pila.append(12)
@@ -163,26 +163,43 @@ def analizador_ascendente(tokens):
             elif tokens[array][0] == "FROM":
                 pila.pop()
                 pila.append(3)
+                array += 1
 
             else:
                 return "Error"
 
 
         elif (pila[position - 1] == 3):  # FROM
-            print("Nuestro token a analizar es:", tokens[array][0])
+            #print("Nuestro token a analizar es:", tokens[array][0])
+
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.append(4)
-                array += 1
+                #print("prueba")
+                if array+1 < len(tokens):
+
+                    #print("La pila va:\n", pila)
+                    #print("la posicion es1:", position)
+                    array += 1
+                    #print("prueba2")
             else:
                 return "Error"
 
 
         elif (pila[position - 1] == 4):  # IDENTIFIER T
-            if tokens[array][0] == "DOT":
+            #print("prueba 3")
+            if array + 1 == len(tokens):
+                for i in range(len(pila)):
+                    pila.pop()
+                pila.append(100)
+                position =1
+
+            elif tokens[array][0] == "DOT":
+
                 pila.append(22)
                 position += 1
                 array += 1
+
             elif tokens[array][0] == "COMMA":
                 pila.append(21)
                 position += 1
@@ -234,7 +251,12 @@ def analizador_ascendente(tokens):
 
 
         elif (pila[position - 1] == 21):  # COMMA T
-            if tokens[array][0] == "IDENTIFIER":
+            if array + 1 == len(tokens):
+                for i in range(len(pila)):
+                    pila.pop()
+                pila.append(100)
+                position=1
+            elif tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.pop()
                 pila.append(4)
@@ -244,7 +266,12 @@ def analizador_ascendente(tokens):
                 S = -1
 
         elif (pila[position - 1] == 22):  # DOT T
-            if tokens[array][0] == "IDENTIFIER":
+            if array + 1 == len(tokens):
+                for i in range(len(pila)):
+                    pila.pop()
+                pila.append(100)
+                position=1
+            elif tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.pop()
                 pila.append(4)
@@ -256,10 +283,10 @@ def analizador_ascendente(tokens):
         else:
             return "Error"
 
-        print("Se esta analizando:", tokens[array][1])
-        print("El posicion de la pila es:", position)
-        print("El array es:", array)
-        print("La pila va:\n", pila)
+        #print("Se esta analizando:", tokens[array][1])
+        #print("El posicion de la pila es:", position)
+        #print("El array es:", array)
+        #print("La pila va:\n", pila)
         if S == -1:
             return "Error"
 
@@ -274,8 +301,8 @@ def analizar_cadena():
         try:
             cadena = input()
             tokens = analizador_lexico(cadena)
-            for token in tokens:
-                print("Tokens:", token)
+            #for token in tokens:
+            #    print("Tokens:", token)
             analisis = analizador_ascendente(tokens)
             print(analisis)
         except EOFError:
