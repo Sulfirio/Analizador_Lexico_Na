@@ -3,15 +3,43 @@ import sys
 pos = 0
 tokens = []
 
-#Seccion declaration
+# Seccion declaration
 
 def declaration():
     token =[]
     return [False,[]]
 
+# Seccion expression
+
 def expression():
     
     return [False,[]]
+
+# Seccion Statement
+
+# Seccion While
+
+def whileStm():
+    token = []
+    if(tokens[pos][0] == "WHILE"):
+        token.append(token[pos][0])
+        pos+=1
+        if(tokens[pos][0] == "LEFT_PAREN"):
+            token.append(token[pos][0])
+            pos+=1
+            comparison = expression()
+            if(comparison[0] == True):
+                token.append(comparison[1])
+                pos+=1
+            comparison2 = whileStm()
+            if(comparison2[0] == True):
+                token.append(comparison2[1])
+                pos+=1
+            return [True, ["WhileStm",token]]
+        else:
+            return [False,[]]
+    else:
+        return [False,[]]
 
 # Seccion Unary
 
