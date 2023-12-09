@@ -43,32 +43,32 @@ def forStm():
             pos+=1
         else:
             return [False,[]]
-        comparison = forStm1()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = forStm1()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
         else:
             return [False,[]]
             
-        comparison2 = forStm2()
-        if(comparison2[0] == True):
-            token.append(comparison2[1])
+        result2 = forStm2()
+        if(result2[0] == True):
+            token.append(result2[1])
             pos+=1
         else:
             return [False,[]]
             
-        comparison3 = forStm3()
-        if(comparison3[0] == True):
-            token.append(comparison3[1])
+        result3 = forStm3()
+        if(result3[0] == True):
+            token.append(result3[1])
             pos+=1
         if(tokens[pos][0] == "RIGHT_PAREN"):
             token.append(tokens[pos][0])
             pos+=1
         else:
             return [False,[]]
-        comparison4 = statement()
-        if(comparison4[0] == True):
-            token.append(comparison4[1])
+        result4 = statement()
+        if(result4[0] == True):
+            token.append(result4[1])
         else:
             return [False,[]]
         return [True,["ForStm",token]]
@@ -78,13 +78,13 @@ def forStm():
     
 def forStm1():
     token = []
-    comparison = varDecl()
-    comparison2 = exprStm()
-    if(comparison[0] == True):
-        token.append(comparison[1])
+    result = varDecl()
+    result2 = exprStm()
+    if(result[0] == True):
+        token.append(result[1])
         return [True,["ForStm1",token]]
-    elif(comparison2[0] == True):
-        token.append(comparison2[1])
+    elif(result2[0] == True):
+        token.append(result2[1])
         return [True,["ForStm1",token]]
     elif(tokens[pos][0] == "SEMICOLON"):
         token.append(tokens[pos][0])
@@ -94,9 +94,9 @@ def forStm1():
         
 def forStm2():
     token = []
-    comparison = expression()
-    if(comparison[0] == True):
-        token.append(comparison[1])
+    result = expression()
+    if(result[0] == True):
+        token.append(result[1])
         pos+=1
         if(tokens[pos][0] == "SEMICOLON"):
             token.append(tokens[pos][0])
@@ -109,9 +109,9 @@ def forStm2():
         return [False,[]]
         
 def forStm3():
-    comparison = expression()
-    if(comparison[0] == True):
-        return [True,["ForStm3"],comparison[1]]
+    result = expression()
+    if(result[0] == True):
+        return [True,["ForStm3"],result[1]]
     
 # Seccion Whil
 
@@ -123,13 +123,13 @@ def whileStm():
         if(tokens[pos][0] == "LEFT_PAREN"):
             token.append(token[pos][0])
             pos+=1
-            comparison = expression()
-            if(comparison[0] == True):
-                token.append(comparison[1])
+            result = expression()
+            if(result[0] == True):
+                token.append(result[1])
                 pos+=1
-            comparison2 = whileStm()
-            if(comparison2[0] == True):
-                token.append(comparison2[1])
+            result2 = whileStm()
+            if(result2[0] == True):
+                token.append(result2[1])
                 pos+=1
             return [True, ["WhileStm",token]]
         else:
@@ -149,24 +149,24 @@ def ifStm():
             pos+=1
         else:
             return [False,[]]
-        comparison = expression()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = expression()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
         if(tokens[pos][0] == "RIGHT_PAREN"):
             token.append(tokens[pos][0])
             pos+=1
         else:
             return [False,[]]
-        comparison2 = statement()
-        if(comparison2[0] == True):
-            token.append(comparison2[1])
+        result2 = statement()
+        if(result2[0] == True):
+            token.append(result2[1])
             pos+=1
         else:
             return [False,[]]
-        comparison3 = elseStm()
-        if(comparison3 == True):
-            token.append(comparison3[1])
+        result3 = elseStm()
+        if(result3 == True):
+            token.append(result3[1])
         return [True,["ForStm",token]]
         
     else:
@@ -177,9 +177,9 @@ def elseStm():
     if(tokens[pos][0] == "ELSE"):
         token.append(tokens[pos][0])
         pos +=1
-        comparison = statement()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = statement()
+        if(result[0] == True):
+            token.append(result[1])
             return [True,["ElseStm",token]]
         else:
             return [False,[]]
@@ -193,9 +193,9 @@ def printStm():
     if(tokens[pos][0] == "PRINT"):
         token.append(tokens[pos][0])
         pos +=1
-        comparison = expression()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = expression()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
         else:
             return [False,[]]
@@ -214,9 +214,9 @@ def returnStm():
     if(tokens[pos][0] == "RETURN"):
         token.append(tokens[pos][0])
         pos +=1
-        comparison = returnOpc()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = returnOpc()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
         if(tokens[pos][0] == "SEMICOLON"):
             token.append(tokens[pos][0])
@@ -227,10 +227,30 @@ def returnStm():
         return [False,[]]
     
 def returnOpc():
-    comparison = expression()
-    if(comparison[0] == True):
-        return [True,"ReturnOpc",comparison[1]]
+    result = expression()
+    if(result[0] == True):
+        return [True,["ReturnOpc",result[1]]]
     return [False,[]]
+
+# Seccion Term
+def exprTerm():
+    token = []
+    result = factor() 
+    if (result[0] == True):
+        token.append(result[1])
+        pos+=1
+        result2 = term2()
+        if(result2[0] == True):
+            token.append(result2[1])
+        return [True,["ExprTerm",token]]
+    else:
+        return [False,[]]
+    
+def term2():
+    return 0
+
+def factor():
+    return 0
 
 # Seccion Unary
 
@@ -239,16 +259,16 @@ def exprUnary():
     if(tokens[pos][0] == "BANG" | tokens[pos][0] == "MINUS"):
         token.append(tokens[pos][0])
         pos+=1
-        comparison = exprUnary()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = exprUnary()
+        if(result[0] == True):
+            token.append(result[1])
             return [True,["ExprUnary",token]]
         else:
             return [False,[]]
     elif(tokens[pos][0] == "TRUE" | tokens[pos][0] == "FALSE" | tokens[pos][0] == "NULL" | tokens[pos][0] == "NUMBER" | tokens[pos][0] == "STRING" | tokens[pos][0] == "IDENTIFIER" | tokens[pos][0] == "LEFT_PAREN"):
-        comparison = exprCall()
-        token.append(comparison[1])
-        if(comparison[0] == True):
+        result = exprCall()
+        token.append(result[1])
+        if(result[0] == True):
             return [True,["ExprUnary",token]]
     else:
         return [False,[]]
@@ -257,13 +277,13 @@ def exprUnary():
 def exprCall():    
     token = []
     if(tokens[pos][0] == "TRUE" | tokens[pos][0] == "FALSE" | tokens[pos][0] == "NULL" | tokens[pos][0] == "NUMBER" | tokens[pos][0] == "STRING" | tokens[pos][0] == "IDENTIFIER" | tokens[pos][0] == "LEFT_PAREN"):
-        comparison = exprPrimary()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = exprPrimary()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
-            comparison2 = exprCall2()                
-            if(comparison2[0] == True):
-                token.append(comparison2[1])
+            result2 = exprCall2()                
+            if(result2[0] == True):
+                token.append(result2[1])
                 return [True,["ExprCall",token]]
             else:
                 return [True,["ExprCall",token]]
@@ -279,18 +299,18 @@ def exprCall2():
     if(tokens[pos][0] == "LEFT_PAREN"):
         token.append(tokens[pos][0])
         pos+=1
-        comparison = argOpc()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = argOpc()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
         if(tokens[pos][0] == "RIGHT_PAREN"):
             token.append(tokens[pos][0])
             pos+=1
         else:
             return [False,[]]
-        comparison2 = exprCall2()
-        if(comparison2[0] == True):
-            token.append(comparison2[1])
+        result2 = exprCall2()
+        if(result2[0] == True):
+            token.append(result2[1])
             return [True,["ExprCall2",token]]
         else:
             return [True,["ExprCall2",token]]
@@ -304,9 +324,9 @@ def exprPrimary():
     elif(tokens[pos][0] == "LEFT_PAREN"):
         token.append(tokens[pos][0])
         pos +=1
-        comparison = expression()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = expression()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
             if(tokens[pos][0] == "RIGHT_PAREN"):
                 tokens.append(tokens[pos][0])
@@ -319,13 +339,13 @@ def exprPrimary():
 
 def argOpc():
     token = []
-    comparison = expression()
-    if(comparison[0] == True):
-        token.append(comparison[1])
+    result = expression()
+    if(result[0] == True):
+        token.append(result[1])
         pos+=1
-        comparison2 = arguments()
-        if(comparison2[0] == True):
-            token.append(comparison2[1])
+        result2 = arguments()
+        if(result2[0] == True):
+            token.append(result2[1])
             return [True,["ArgOpc", token]]
         else:
             return [True,["ArgOpc", token]]
@@ -338,13 +358,13 @@ def arguments():
     if(tokens[pos][0] == "COMMA"):
         token.append(tokens[pos][0])
         pos+=1
-        comparison = expression()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = expression()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
-        comparison2 = expression()
-        if(comparison2[0] == True):
-            token.append(comparison2[1])
+        result2 = expression()
+        if(result2[0] == True):
+            token.append(result2[1])
             pos+=1
         return [True,["Arguments", token]]
     else:
@@ -362,18 +382,18 @@ def funct():
             pos +=1
         else:
             return [False,[]]
-        comparison = paramOpc()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = paramOpc()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
         if(tokens[pos][0] == "RIGHT_PAREN"):
             token.append(tokens[pos][0])
             pos +=1
         else:
             return [False,[]]
-        comparison2 = block()
-        if(comparison2[0] == True):
-            token.append(comparison2[1])
+        result2 = block()
+        if(result2[0] == True):
+            token.append(result2[1])
             pos+=1
             return [True,["Function", token]]
         else:
@@ -387,9 +407,9 @@ def funct():
 def paramOpc():
     token = []
     if(tokens[pos][0] == "IDENTIFIER"):
-        comparison = parameters()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = parameters()
+        if(result[0] == True):
+            token.append(result[1])
         return [True,["ParametersOpc",token]]
     else:
         return [False,[]]
@@ -399,9 +419,9 @@ def parameters():
     if(tokens[pos][0] == "IDENTIFIER"):
         token.append(tokens[pos][0])
         pos+=1
-        comparison = parameters2()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = parameters2()
+        if(result[0] == True):
+            token.append(result[1])
         else:
             return [False,[]] 
         return [True,["Parameters",token]]
@@ -418,9 +438,9 @@ def parameters2():
             pos+=1
         else:
             return [False,[]]
-        comparison = parameters2
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = parameters2
+        if(result[0] == True):
+            token.append(result[1])
         else:
             return [False,[]]
         return [True,["Parameters_2",token]]
@@ -435,9 +455,9 @@ def block():
     if(tokens[pos][0] == "LEFT_BRACE"):
         token.append(tokens[pos][0])
         pos+=1
-        comparison = declaration()
-        if(comparison[0] == True):
-            token.append(comparison[1])
+        result = declaration()
+        if(result[0] == True):
+            token.append(result[1])
             pos+=1
         if(tokens[pos][0] == "LEFT_BRACE"):
             token.append(tokens[pos][0])
