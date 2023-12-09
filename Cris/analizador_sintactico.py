@@ -3,10 +3,11 @@ import sys
 pos = 0
 tokens = []
 
+#Seccion declaration
 
-def analizador_sintactico(tokens):
-    
-    return 0
+def declaration():
+    token =[]
+    return [False,[]]
 
 def expression():
     
@@ -227,11 +228,6 @@ def block():
     else:
         return [False,[]]
 
-#Seccion declaration
-
-def declaration():
-    token =[]
-    return [False,[]]
 
 def main():
     tokens.append("BANG","!")
