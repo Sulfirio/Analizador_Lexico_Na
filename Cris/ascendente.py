@@ -38,6 +38,8 @@ def analizador_lexico(input_string):
     token = ""
     while pos < len(input_string):
         char = input_string[pos]
+        print("Se analiza el character: ", char)
+        print("Estamos en estado:", state)
         if state == S0:
             token = ""
             if char.isspace():
@@ -59,6 +61,7 @@ def analizador_lexico(input_string):
                 continue
             else:
                 state = SA
+                
         if state == S1:
             if char.isalpha() or char.isnumeric():
                 state = S1
@@ -74,6 +77,8 @@ def analizador_lexico(input_string):
             else:
                 state = 14
             pos += 1
+            if(pos == len(input_string)):
+                state = 14
 
         if state == S2:
             tokens.append(("ASTERIC", token))
@@ -90,7 +95,7 @@ def analizador_lexico(input_string):
             state = 0
             pos += 1
 
-        if state == S14:
+        if state == S14:            
             status = 0
             for i in range(len(keywords)):
                 if token == (keywords[i].lower()):
@@ -99,7 +104,9 @@ def analizador_lexico(input_string):
             if status == 0:
                 tokens.append(["IDENTIFIER", token])
             state = S0
+            
             pos -= 1
+            
 
         if state == SA:
             print("Error.")
@@ -118,10 +125,12 @@ def analizador_ascendente(tokens):
     while(array < len(tokens)):
         if tokens[array][0] == "SELECT":
             pila.append(0)
+            position += 1
             array += 1
         
         if(pila[position-1] == 0):          #SELECT
-            if tokens[array][0] == "*":
+            
+            if tokens[array][0] == "ASTERIC":
                 pila.append(1)
                 position +=1
                 array +=1
@@ -137,12 +146,13 @@ def analizador_ascendente(tokens):
             
         elif(pila[position-1] == 1):          #*
             if tokens[array][0] == "FROM":
-                pila.append(2)
+                pila.append(3)
                 position +=1
                 array +=1
             
         elif(pila[position-1] == 2):          #IDENTIFIER D
             if tokens[array][0] == "DOT":
+                pila.pop()
                 pila.append(12)
                 position +=1
                 array +=1
@@ -156,12 +166,21 @@ def analizador_ascendente(tokens):
                 array +=1
             else:
                 return "Error"
+            
+            aux = 0
+            i = 0
+            while(aux == 0):
+                if i == len(pila):
+                    aux = 1
+                pila.pop()                
+                i += 1
                 
         elif(pila[position-1] == 3):          #FROM
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.append(4)
-                array+=1
+                if array+1 < len(tokens):
+                    array+=1
             else:
                 return "Error"
                 
@@ -186,7 +205,7 @@ def analizador_ascendente(tokens):
             if tokens[array][0] == "IDENTIFIER":
                 pila.pop()
                 pila.append(2)
-            elif tokens[array][0] == "*":
+            elif tokens[array][0] == "ASTERISC":
                 pila.pop()
                 pila.append(1)            
             else:
