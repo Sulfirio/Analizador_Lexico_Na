@@ -132,6 +132,107 @@ def arguments():
     
 #Seccion Functions
 
+def funct():
+    token = []
+    if(tokens[pos][0] == "IDENTIFIER"):
+        token.append(tokens[pos][0])
+        pos+=1
+        if(tokens[pos][0] == "LEFT_PAREN"):
+            token.append(tokens[pos][0])
+            pos +=1
+        else:
+            return [False,[]]
+        comparison = paramOpc()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+            pos+=1
+        if(tokens[pos][0] == "RIGHT_PAREN"):
+            token.append(tokens[pos][0])
+            pos +=1
+        else:
+            return [False,[]]
+        comparison2 = block()
+        if(comparison2[0] == True):
+            token.append(comparison2[1])
+            pos+=1
+            return [True,["Function", token]]
+        else:
+            return [False,[]]
+    else:
+        return [False,[]]
+    
+    
+#Seccion parameters
+
+def paramOpc():
+    token = []
+    if(tokens[pos][0] == "IDENTIFIER"):
+        comparison = parameters()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+        return [True,["ParametersOpc",token]]
+    else:
+        return [False,[]]
+    
+def parameters():
+    token = []
+    if(tokens[pos][0] == "IDENTIFIER"):
+        token.append(tokens[pos][0])
+        pos+=1
+        comparison = parameters2()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+        else:
+            return [False,[]] 
+        return [True,["Parameters",token]]
+    else:
+        return [False,[]]
+    
+def parameters2():
+    token = []
+    if(tokens[pos][0] == "COMMA"):
+        token.append(tokens[pos][0])
+        pos+=1
+        if(tokens[pos][0] == "IDENTIFIER"):
+            token.append(tokens[pos][0])
+            pos+=1
+        else:
+            return [False,[]]
+        comparison = parameters2
+        if(comparison[0] == True):
+            token.append(comparison[1])
+        else:
+            return [False,[]]
+        return [True,["Parameters_2",token]]
+    else:
+        return [True,[""]]
+    return [False,[]]
+
+#Seccion block
+
+def block():
+    token =[]
+    if(tokens[pos][0] == "LEFT_BRACE"):
+        token.append(tokens[pos][0])
+        pos+=1
+        comparison = declaration()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+            pos+=1
+        if(tokens[pos][0] == "LEFT_BRACE"):
+            token.append(tokens[pos][0])
+            pos+=1
+        else:
+            return [False,[]]
+    else:
+        return [False,[]]
+
+#Seccion declaration
+
+def declaration():
+    token =[]
+    return [False,[]]
+
 def main():
     tokens.append("BANG","!")
     tokens.append("IDENTIFIER","aux")
