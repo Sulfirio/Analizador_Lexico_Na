@@ -15,9 +15,105 @@ def expression():
     
     return [False,[]]
 
-# Seccion Statement
+def exprStm():
+    
+    return [False,[]]
 
-# Seccion While
+# Seccion Var
+
+def varDecl():
+    
+    return [False,[]]
+
+# Seccion statement
+
+def statement():
+    token = []
+    return [False,[]]
+
+# Seccion For
+
+def forStm():
+    token = []
+    if(tokens[pos][0] == "FOR"):
+        token.append(tokens[pos][0])
+        pos+=1
+        if(tokens[pos][0] == "LEFT_PAREN"):
+            token.append(tokens[pos][0])
+            pos+=1
+        else:
+            return [False,[]]
+        comparison = forStm1()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+            pos+=1
+        else:
+            return [False,[]]
+            
+        comparison2 = forStm2()
+        if(comparison2[0] == True):
+            token.append(comparison2[1])
+            pos+=1
+        else:
+            return [False,[]]
+            
+        comparison3 = forStm3()
+        if(comparison3[0] == True):
+            token.append(comparison3[1])
+            pos+=1
+        if(tokens[pos][0] == "RIGHT_PAREN"):
+            token.append(tokens[pos][0])
+            pos+=1
+        else:
+            return [False,[]]
+        comparison4 = statement()
+        if(comparison4[0] == True):
+            token.append(comparison4[1])
+        else:
+            return [False,[]]
+        return [True,["ForStm",token]]
+    else:
+        return [False,[]]
+    
+    
+def forStm1():
+    token = []
+    comparison = varDecl()
+    comparison2 = exprStm()
+    if(comparison[0] == True):
+        token.append(comparison[1])
+        return [True,["ForStm1",token]]
+    elif(comparison2[0] == True):
+        token.append(comparison2[1])
+        return [True,["ForStm1",token]]
+    elif(tokens[pos][0] == "SEMICOLON"):
+        token.append(tokens[pos][0])
+        return [True,["ForStm1",token]]
+    else:
+        return [False,[]]
+        
+def forStm2():
+    token = []
+    comparison = expression()
+    if(comparison[0] == True):
+        token.append(comparison[1])
+        pos+=1
+        if(tokens[pos][0] == "SEMICOLON"):
+            token.append(tokens[pos][0])
+        else:
+            return [False,[]]
+        return [True,["ForStm2",token]]
+    elif(tokens[pos][0] == "SEMICOLON"):
+        return [True,["ForStm2",tokens[pos][0]]]
+    else:
+        return [False,[]]
+        
+def forStm3():
+    comparison = expression()
+    if(comparison[0] == True):
+        return [True,["ForStm3"],comparison[1]]
+    
+# Seccion Whil
 
 def whileStm():
     token = []
@@ -40,6 +136,101 @@ def whileStm():
             return [False,[]]
     else:
         return [False,[]]
+
+# Seccion if
+
+def ifStm():
+    token = []
+    if(tokens[pos][0] == "IF"):
+        token.append(tokens[pos][0])
+        pos+=1
+        if(tokens[pos][0] == "LEFT_PAREN"):
+            token.append(tokens[pos][0])
+            pos+=1
+        else:
+            return [False,[]]
+        comparison = expression()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+            pos+=1
+        if(tokens[pos][0] == "RIGHT_PAREN"):
+            token.append(tokens[pos][0])
+            pos+=1
+        else:
+            return [False,[]]
+        comparison2 = statement()
+        if(comparison2[0] == True):
+            token.append(comparison2[1])
+            pos+=1
+        else:
+            return [False,[]]
+        comparison3 = elseStm()
+        if(comparison3 == True):
+            token.append(comparison3[1])
+        return [True,["ForStm",token]]
+        
+    else:
+        return [False,[]]
+    
+def elseStm():
+    token = []
+    if(tokens[pos][0] == "ELSE"):
+        token.append(tokens[pos][0])
+        pos +=1
+        comparison = statement()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+            return [True,["ElseStm",token]]
+        else:
+            return [False,[]]
+    else:
+        return [False,[]]
+
+# Seccion Print 
+
+def printStm():
+    token = []
+    if(tokens[pos][0] == "PRINT"):
+        token.append(tokens[pos][0])
+        pos +=1
+        comparison = expression()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+            pos+=1
+        else:
+            return [False,[]]
+        if(tokens[pos][0] == "SEMICOLON"):
+            token.append(tokens[pos][0])
+            return [True,["ElseStm",token]]
+        else:    
+            return [False,[]]
+    else:
+        return [False,[]]
+
+#Seccion Return
+
+def returnStm():
+    token = []
+    if(tokens[pos][0] == "RETURN"):
+        token.append(tokens[pos][0])
+        pos +=1
+        comparison = returnOpc()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+            pos+=1
+        if(tokens[pos][0] == "SEMICOLON"):
+            token.append(tokens[pos][0])
+            return [True,["ReturnStm",token]]
+        else:    
+            return [False,[]]
+    else:
+        return [False,[]]
+    
+def returnOpc():
+    comparison = expression()
+    if(comparison[0] == True):
+        return [True,"ReturnOpc",comparison[1]]
+    return [False,[]]
 
 # Seccion Unary
 
