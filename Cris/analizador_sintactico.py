@@ -12,6 +12,8 @@ def expression():
     
     return [False,[]]
 
+# Seccion Unary
+
 def exprUnary():
     token = []
     if(tokens[pos][0] == "BANG" | tokens[pos][0] == "MINUS"):
@@ -93,10 +95,42 @@ def exprPrimary():
                 return [False,[]]
     return [False,[]]
 
-def argOPC():
+#Seccion Argumentos
+
+def argOpc():
     token = []
+    comparison = expression()
+    if(comparison[0] == True):
+        token.append(comparison[1])
+        pos+=1
+        comparison2 = arguments()
+        if(comparison2[0] == True):
+            token.append(comparison2[1])
+            return [True,["ArgOpc", token]]
+        else:
+            return [True,["ArgOpc", token]]
+    else:
+        return [False,[]]
+    return [False,[]]
+
+def arguments():
+    token = []
+    if(tokens[pos][0] == "COMMA"):
+        token.append(tokens[pos][0])
+        pos+=1
+        comparison = expression()
+        if(comparison[0] == True):
+            token.append(comparison[1])
+            pos+=1
+        comparison2 = expression()
+        if(comparison2[0] == True):
+            token.append(comparison2[1])
+            pos+=1
+        return [True,["Arguments", token]]
+    else:
+        return [False,[]]
     
-    return 0
+#Seccion Functions
 
 def main():
     tokens.append("BANG","!")
