@@ -345,6 +345,12 @@ def analizar_cadena():
                 print("Tokens:", token)
             for token in comments:
                 print("Comentarios:", token)
+            program = declaration()
+            if (program == True):
+                print("Compilado")
+            else:
+                print("Error en el codigo")
+
         except EOFError:
             # Fin de la entrada
             break
@@ -1204,12 +1210,6 @@ def block():
 
 
 def main():
-    program = declaration()
-    if (program == True):
-        print("Compilado")
-    else:
-        print("Error en el codigo")
-
     if len(sys.argv) > 1:
         # Si se proporcionan argumentos, asumimos que son nombres de archivos para analizar
         for nombre_archivo in sys.argv[1:]:
