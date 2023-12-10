@@ -333,7 +333,7 @@ def analizador_lexico(input_string):
         else:
             raise ValueError(f"Token incompleto al final de la cadena: {token}")
 
-    return tokens, comments
+    return tokens
 
 
 def analizar_cadena():
@@ -343,8 +343,8 @@ def analizar_cadena():
             tokens, comments = analizador_lexico(cadena)
             for token in tokens:
                 print("Tokens:", token)
-            for token in comments:
-                print("Comentarios:", token)
+            #for token in comments:
+            #    print("Comentarios:", token)
         except EOFError:
             # Fin de la entrada
             break
@@ -358,7 +358,7 @@ def analizar_archivo(nombre_archivo):
             contenido = file.read()
             tokens, comments = analizador_lexico(contenido)
             print("Tokens:", tokens)
-            print("Comentarios:", comments)
+            #print("Comentarios:", comments)
     except FileNotFoundError:
         print(f"El archivo '{nombre_archivo}' no se encontró.")
     except Exception as e:
