@@ -659,6 +659,11 @@ def block():
 def main():
     tokens.append("BANG","!")
     tokens.append("IDENTIFIER","aux")
+    program = declaration()
+    if(program == True):
+        print("Compilado")
+    else:
+        print("Error en el codigo")
     return 0
 
 
