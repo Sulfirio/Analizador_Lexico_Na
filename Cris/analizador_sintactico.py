@@ -374,10 +374,161 @@ def assignmentOpc():
     else:
         return [False,[]]
 
-# Seccion Logic
+# Seccion logica or
 
-def logicOr():
-    return 0
+def exprOr():
+    token = []
+    result = exprAnd()
+    if (result[0] == True):
+        token.append(result[1])
+        pos += 1
+        result2 = exprOr2()
+        if (result2[0] == True):
+            token.append(result2[1])
+            return [True, ["ExprOr", token]]
+        else:
+            return [True, ["ExprOr", token]]
+    else:
+        return [False, []]
+
+
+def exprOr2():
+    token = []
+    if (tokens[pos][0] == "OR"):
+        token.append(tokens[pos][0])
+        pos += 1
+        result = exprAnd()
+        if (result[0] == True):
+            token.append(result[1])
+            pos += 1
+        else:
+            return [False, []]
+        result2 = exprOr2()
+        if (result2[0] == True):
+            token.append(result2[1])
+            return [True, ["ExprOr2", token]]
+        else:
+            return [True, ["ExprOr2", token]]
+    else:
+        return [False, []]
+
+
+# Seccion Logica and
+
+def exprAnd():
+    token = []
+    result = exprEquality()
+    if (result[0] == True):
+        token.append(result[1])
+        pos += 1
+        result2 = exprAnd2()
+        if (result2[0] == True):
+            token.append(result2[1])
+            return [True, ["ExprAnd", token]]
+        else:
+            return [True, ["ExprAnd", token]]
+    else:
+        return [False, []]
+
+
+def exprAnd2():
+    token = []
+    if (tokens[pos][0] == "AND"):
+        token.append(tokens[pos][0])
+        pos += 1
+        result = exprEquality()
+        if (result[0] == True):
+            token.append(result[1])
+            pos += 1
+        else:
+            return [False, []]
+        result2 = exprAnd2()
+        if (result2[0] == True):
+            token.append(result2[1])
+            return [True, ["ExprAnd2", token]]
+        else:
+            return [True, ["ExprAnd2", token]]
+    else:
+        return [False, []]
+
+
+# Seccion EQUALITY
+def exprEquality():
+    token = []
+    result = exprComp()
+    if (result[0] == True):
+        token.append(result[1])
+        pos += 1
+        result2 = exprEquality2()
+        if (result2[0] == True):
+            token.append(result2[1])
+            return [True, ["ExprEquality", token]]
+        else:
+            return [True, ["ExprEquality", token]]
+    else:
+        return [False, []]
+
+
+def exprEquality2():
+    token = []
+    if (tokens[pos][0] == "BANG_EQUAL" | tokens[pos][0] == "EQUAL_EQUAL"):
+        token.append(tokens[pos][0])
+        pos += 1
+        result = exprComp()
+        if (result[0] == True):
+            token.append(result[1])
+            pos += 1
+        else:
+            return [False, []]
+        result2 = exprEquality2()
+        if (result2[0] == True):
+            token.append(result2[1])
+            return [True, ["ExprEquality2", token]]
+        else:
+            return [True, ["ExprEquality2", token]]
+    else:
+        return [False, []]
+
+
+# Seccion COMPARSION
+def exprComp():
+    token = []
+    result = exprTerm()
+    if (result[0] == True):
+        token.append(result[1])
+        pos += 1
+        result2 = exprComp2()
+        if (result2[0] == True):
+            token.append(result2[1])
+            return [True, ["ExprComp", token]]
+        else:
+            return [True, ["ExprComp", token]]
+    else:
+        return [False, []]
+
+
+def exprComp2():
+    token = []
+    if (tokens[pos][0] == "GREATER" | tokens[pos][0] == "GREATER_EQUAL" | tokens[pos][0] == "LESS" | tokens[pos][
+        0] == "LESS_EQUAL"):
+        token.append(tokens[pos][0])
+        pos += 1
+        result = exprTerm()
+        if (result[0] == True):
+            token.append(result[1])
+            pos += 1
+        else:
+            return [False, []]
+        result2 = exprComp2()
+        if (result2[0] == True):
+            token.append(result2[1])
+            return [True, ["ExprComp2", token]]
+        else:
+            return [True, ["ExprComp2", token]]
+    else:
+        return [False, []]
+
+
 # Seccion Term
 def exprTerm():
     token = []
