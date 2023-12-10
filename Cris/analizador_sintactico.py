@@ -9,12 +9,6 @@ def declaration():
     token =[]
     return [False,[]]
 
-# Seccion expression
-
-def expression():
-    
-    return [False,[]]
-
 def exprStm():
     
     return [False,[]]
@@ -231,7 +225,48 @@ def returnOpc():
     if(result[0] == True):
         return [True,["ReturnOpc",result[1]]]
     return [False,[]]
+# Seccion expression
 
+def expression():
+    result = assignment()
+    if(result[0] == True):
+        return [True,["Expresion", result[1]]]
+    else:
+        return [False,[]]
+
+# Seccion Assignment
+
+def assignment():
+    token = []
+    result = logicOr()
+    if(result[0] == True):
+        token.append(result[1])
+        pos+=1
+        result2 = assignmentOpc()
+        if(result2[0] == True):
+            token.append(result2[1])
+        return [True,["Assignment", result[1]]]
+    else:
+        return [False,[]]
+    
+def assignmentOpc():
+    token = []
+    if(tokens[pos][0] == "EQUAL"):
+        token.append(tokens[pos][0])
+        pos+=1
+        result = expression()
+        if(result[0] == True):
+            token.append(result[1])
+        else:
+            return [False,[]]
+        return[True,["AssigmentOpc",token]]
+    else:
+        return [False,[]]
+
+# Seccion Logic
+
+def logicOr():
+    return 0
 # Seccion Term
 def exprTerm():
     token = []
@@ -247,10 +282,52 @@ def exprTerm():
         return [False,[]]
     
 def term2():
-    return 0
+    token = []
+    if(tokens[pos][0]== "MINUS" | tokens[pos][0] == "PLUS"):
+        token.append(tokens[pos][0])
+        pos+=1
+        result = factor()
+        if(result[0] == True):
+            token.append(result[1])
+            pos+=1
+        else:
+            return [False,[]]
+        result2 = term2()
+        if(result2[0] == True):
+            token.append(result2[1])
+        return [True,["Term2",token]]
+    else:
+        return [False,[]]
 
 def factor():
-    return 0
+    token = []
+    result = exprUnary()
+    if(result[0] == True):
+        token.append(result[1])
+        pos+=1
+        result2 = factor2()
+        if(result2[0] == True):
+            token.append(result2[1])
+        return [True,["Factor",token]]
+    else:
+        return [False,[]]
+def factor2():
+    token = []
+    if(tokens[pos][0] == "STAR" | tokens[pos][0] == "SLASH"):
+        token.append(tokens[pos][0])
+        pos+=1
+        result = exprUnary()
+        if(result[0] == True):
+            token.append(result[1])
+            pos+=1           
+        else:
+            return [False,[]]
+        result2 = factor2() 
+        if(result2[0] == True):
+            token.append(result2[1])
+        return [True,["Factor2",token]]
+    else:
+        return [False,[]]
 
 # Seccion Unary
 
