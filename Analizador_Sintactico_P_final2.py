@@ -46,7 +46,6 @@ keywords = [
 pos = 0
 Tokens = []
 
-
 def analizador_lexico(input_string):
     tokens = []
     S0 = 0
@@ -85,31 +84,31 @@ def analizador_lexico(input_string):
     S34 = 34
 
     state = S0
-    pos = 0
+    position = 0
     token = ""
     comments = []
     comment_start = -1
     char_to_token = {v: k for k, v in token_dict.items()}
     tuo = len(input_string)
     print(tuo)
-    while pos < len(input_string):
-        char = input_string[pos]
+    while position < len(input_string):
+        char = input_string[position]
         if state == S0:
             token = ""
             if char == '<':
                 state = S1
-                pos += 1
+                position += 1
             elif char == '>':
                 state = S2
-                pos += 1
+                position += 1
             elif char == '=':
                 state = S3
-                pos += 1
+                position += 1
             elif char == '!':
                 state = S4
-                pos += 1
+                position += 1
             elif char.isspace():
-                pos += 1
+                position += 1
                 continue
             elif char.isnumeric():
                 state = S15
@@ -117,12 +116,12 @@ def analizador_lexico(input_string):
                 state = S13
             elif char == '/':
                 state = S26
-                comment_start = pos
-                pos += 1
+                comment_start = position
+                position += 1
                 continue
             elif char == '"':
                 state = S24
-                pos += 1
+                position += 1
                 continue
             else:
                 state = S25
@@ -131,7 +130,7 @@ def analizador_lexico(input_string):
             if char == '=':
                 token_type = [k for k, v in token_dict.items() if v == "<="][0]
                 tokens.append([token_type, "<="])
-                pos += 1
+                position += 1
             else:
                 token_type = [k for k, v in token_dict.items() if v == "<"][0]
                 tokens.append([token_type, "<"])
@@ -142,7 +141,7 @@ def analizador_lexico(input_string):
             if char == '=':
                 token_type = [k for k, v in token_dict.items() if v == ">="][0]
                 tokens.append([token_type, ">="])
-                pos += 1
+                position += 1
             else:
                 token_type = [k for k, v in token_dict.items() if v == ">"][0]
                 tokens.append([token_type, ">"])
@@ -153,7 +152,7 @@ def analizador_lexico(input_string):
             if char == '=':
                 token_type = [k for k, v in token_dict.items() if v == "=="][0]
                 tokens.append([token_type, "=="])
-                pos += 1
+                position += 1
             else:
                 token_type = [k for k, v in token_dict.items() if v == "="][0]
                 tokens.append([token_type, "="])
@@ -164,11 +163,11 @@ def analizador_lexico(input_string):
             if char == '=':
                 token_type = [k for k, v in token_dict.items() if v == "!="][0]
                 tokens.append([token_type, "!="])
-                pos += 1
+                position += 1
             else:
                 token_type = [k for k, v in token_dict.items() if v == "!"][0]
                 tokens.append([token_type, "!"])
-                # Corrección: incrementar pos aquí también
+                # Corrección: incrementar position aquí también
             state = S0
 
         if state == S13:
@@ -177,7 +176,7 @@ def analizador_lexico(input_string):
                 token += char
             else:
                 state = 14
-            pos += 1
+            position += 1
 
         if state == S14:
             status = 0
@@ -188,23 +187,23 @@ def analizador_lexico(input_string):
             if status == 0:
                 tokens.append(["IDENTIFIER", token])
             state = S0
-            pos -= 1
+            position -= 1
 
         if state == S15:
             if char.isnumeric():
                 state = S15
                 token += char
-                pos += 1
+                position += 1
 
             elif char == '.':
                 state = S16
                 token += char
-                pos += 1
+                position += 1
 
             elif char == 'E':
                 state = S18
                 token += char
-                pos += 1
+                position += 1
             else:
                 state = S22
 
@@ -216,12 +215,12 @@ def analizador_lexico(input_string):
             if char.isnumeric():
                 state = S17
                 token += char
-                pos += 1
+                position += 1
 
             elif char == 'E':
                 state = S18
                 token += char
-                pos += 1
+                position += 1
             else:
                 state = S23
 
@@ -234,20 +233,20 @@ def analizador_lexico(input_string):
                 state = S20
                 token += char
 
-            pos += 1
+            position += 1
 
         elif state == S19:
             if char.isnumeric():
                 state = S20
                 token += char
 
-            pos += 1
+            position += 1
 
         elif state == S20:
             if char.isnumeric():
                 state = S20
                 token += char
-                pos += 1
+                position += 1
             else:
                 state = S21
         if state == S21:
@@ -271,13 +270,13 @@ def analizador_lexico(input_string):
                 break
             else:
                 token += char
-            pos += 1
+            position += 1
 
         if state == S25:
             if char in char_to_token:
                 tokens.append([char_to_token[char], char])
                 state = S0
-            pos += 1
+            position += 1
 
         elif state == S26:
             if char == '/':
@@ -287,36 +286,36 @@ def analizador_lexico(input_string):
             else:
                 state = S32
                 continue
-            pos += 1
+            position += 1
             continue
 
         if state == S27:
             if char == '*':
                 state = S28
-            pos += 1
+            position += 1
             continue
 
         if state == S28:
             if char == '/':
                 state = S0
-                comments.append(input_string[comment_start:pos + 1])
+                comments.append(input_string[comment_start:position + 1])
                 comment_start = -1
             elif char == '*':
                 # Nos mantenemos en S28
                 pass
             else:
                 state = S27
-            pos += 1
+            position += 1
             continue
 
         elif state == S30:
-            if char == '\n' or pos == len(input_string) - 1:
+            if char == '\n' or position == len(input_string) - 1:
                 state = S0
                 if char != '\n':  # Si el comentario no termina con un salto de línea, incluir el último caracter
-                    pos += 1
-                comments.append(input_string[comment_start:pos])
+                    position += 1
+                comments.append(input_string[comment_start:position])
                 comment_start = -1
-            pos += 1
+            position += 1
             continue
         if state == S32:
             # Buscar el identificador correspondiente en el diccionario
