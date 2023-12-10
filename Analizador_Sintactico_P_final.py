@@ -726,7 +726,7 @@ def Expression():
 
 def assignment():
     token = []
-    result = logicOr()
+    result = exprOr()
     if (result[0] == True):
         token.append(result[1])
         pos += 1
