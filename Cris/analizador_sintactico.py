@@ -349,7 +349,7 @@ def Expression():
 
 def assignment():
     token = []
-    result = logicOr()
+    result = exprOr()
     if(result[0] == True):
         token.append(result[1])
         pos+=1
@@ -573,6 +573,7 @@ def factor():
         return [True,["Factor",token]]
     else:
         return [False,[]]
+    
 def factor2():
     token = []
     if(tokens[pos][0] == "STAR" | tokens[pos][0] == "SLASH"):
