@@ -7,23 +7,134 @@ tokens = []
 
 def declaration():
     token =[]
-    return [False,[]]
-
-def exprStm():
-    
-    return [False,[]]
-
-# Seccion Var
-
+    result = funDecl()
+    if(result[0] == True):
+        token.append(result[1])
+        pos+=1
+        result2 = declaration()
+        if(result2[0] == True):
+            token.append(result2[1])
+        return [True,["Declaration",token]]
+    else:
+        result = varDecl()
+        if(result[0] == True):
+            token.append(result[1])
+            pos+=1
+            result2 = declaration()
+            if(result2[0] == True):
+                token.append(result2[1])
+            return [True,["Declaration",token]]
+        else:
+            result = statement()
+            if(result[0] == True):                
+                token.append(result[1])
+                pos+=1
+                result2 = declaration()
+                if(result2[0] == True):
+                    token.append(result2[1])
+                return [True,["Declaration",token]]
+            else:
+                return [False,[]]
+            
+            
+def funDecl():
+    token = []
+    if(tokens[pos][0] == "FUN"):
+        token.append(tokens[pos][0])
+        pos+=1
+        result = funct()
+        if(result[0] == True):
+            token.append(result[1])
+            return [True,["FunDecl",token]]
+        else:
+            return [False,[]]
+    else:
+        return [False,[]]
+            
 def varDecl():
+    token = []
+    if(tokens[pos][0] == "VAR"):
+        token.append(tokens[pos][0])
+        pos+=1
+        if(tokens[pos][0] == "IDENTIFIER"):
+            token.append(tokens[pos][0])
+            pos+=1
+        else:
+            return [False,[]]
+        result = varInit()
+        if(result[0] == True):
+            token.append(result[1])
+            pos+=1
+        if(tokens[pos][0] == "SEMICOLON"):
+            token.append(tokens[pos][0])
+        else:
+            return [False,[]]            
+        return [True,["VarDecl",token]]
+        
+    else:
+        return [False,[]]
     
-    return [False,[]]
+def varInit():
+    token = []
+    if(tokens[pos][0] == "EQUAL"):
+        token.append(tokens[pos][0])
+        pos+=1
+        result = Expression()
+        if(result[0] == 1):
+            token.append(result[1])
+            return [True,["VarInit",token]]
+        else:
+            return [False,[]]
+    else:
+        return [False,[]]
 
 # Seccion statement
 
 def statement():
+    result = exprStm()
+    if(result[0] == True):
+        return [True,["Statement",result[1]]]
+    else:
+        result = forStm()
+        if(result[0] == True):
+            return [True,["Statement",result[1]]]
+        else:
+            result = ifStm()
+            if(result[0] == True):
+                return [True,["Statement",result[1]]]
+            else:
+                result = printStm()
+                if(result[0] == True):
+                    return [True,["Statement",result[1]]]
+                else:
+                    result = returnStm()
+                    if(result[0] == True):
+                        return [True,["Statement",result[1]]]
+                    else:
+                        result = whileStm()
+                        if(result[0] == True):
+                            return [True,["Statement",result[1]]]
+                        else:
+                            result = block()
+                            if(result[0] == True):
+                                return [True,["Statement",result[1]]]
+                            else:
+                                return [False,[]]
+
+def exprStm():
     token = []
-    return [False,[]]
+    result = Expression()
+    if(result[0] == True):
+        token.append(result[1])
+        pos+=1
+        if(tokens[pos][0] == "SEMICOLON"):
+            token.append(tokens[pos][0])
+            return [True,["exprStm",token]]
+        else:
+            return [False,[]]
+            
+    else:
+        return [False,[]]
 
 # Seccion For
 
@@ -88,7 +199,7 @@ def forStm1():
         
 def forStm2():
     token = []
-    result = expression()
+    result = Expression()
     if(result[0] == True):
         token.append(result[1])
         pos+=1
@@ -103,11 +214,11 @@ def forStm2():
         return [False,[]]
         
 def forStm3():
-    result = expression()
+    result = Expression()
     if(result[0] == True):
         return [True,["ForStm3"],result[1]]
     
-# Seccion Whil
+# Seccion While
 
 def whileStm():
     token = []
@@ -117,7 +228,7 @@ def whileStm():
         if(tokens[pos][0] == "LEFT_PAREN"):
             token.append(token[pos][0])
             pos+=1
-            result = expression()
+            result = Expression()
             if(result[0] == True):
                 token.append(result[1])
                 pos+=1
@@ -143,7 +254,7 @@ def ifStm():
             pos+=1
         else:
             return [False,[]]
-        result = expression()
+        result = Expression()
         if(result[0] == True):
             token.append(result[1])
             pos+=1
@@ -187,7 +298,7 @@ def printStm():
     if(tokens[pos][0] == "PRINT"):
         token.append(tokens[pos][0])
         pos +=1
-        result = expression()
+        result = Expression()
         if(result[0] == True):
             token.append(result[1])
             pos+=1
@@ -221,13 +332,13 @@ def returnStm():
         return [False,[]]
     
 def returnOpc():
-    result = expression()
+    result = Expression()
     if(result[0] == True):
         return [True,["ReturnOpc",result[1]]]
     return [False,[]]
-# Seccion expression
+# Seccion Expression
 
-def expression():
+def Expression():
     result = assignment()
     if(result[0] == True):
         return [True,["Expresion", result[1]]]
@@ -254,7 +365,7 @@ def assignmentOpc():
     if(tokens[pos][0] == "EQUAL"):
         token.append(tokens[pos][0])
         pos+=1
-        result = expression()
+        result = Expression()
         if(result[0] == True):
             token.append(result[1])
         else:
@@ -401,7 +512,7 @@ def exprPrimary():
     elif(tokens[pos][0] == "LEFT_PAREN"):
         token.append(tokens[pos][0])
         pos +=1
-        result = expression()
+        result = Expression()
         if(result[0] == True):
             token.append(result[1])
             pos+=1
@@ -416,7 +527,7 @@ def exprPrimary():
 
 def argOpc():
     token = []
-    result = expression()
+    result = Expression()
     if(result[0] == True):
         token.append(result[1])
         pos+=1
@@ -435,11 +546,11 @@ def arguments():
     if(tokens[pos][0] == "COMMA"):
         token.append(tokens[pos][0])
         pos+=1
-        result = expression()
+        result = Expression()
         if(result[0] == True):
             token.append(result[1])
             pos+=1
-        result2 = expression()
+        result2 = Expression()
         if(result2[0] == True):
             token.append(result2[1])
             pos+=1
