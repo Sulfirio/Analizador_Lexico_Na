@@ -46,6 +46,7 @@ keywords = [
 pos = 0
 Tokens = []
 
+
 def analizador_lexico(input_string):
     tokens = []
     S0 = 0
@@ -343,7 +344,14 @@ def analizar_cadena():
             tokens = analizador_lexico(cadena)
             for token in tokens:
                 print("Tokens:", token)
-            #for token in comments:
+            Tokens= tokens
+            pos = 0
+            program = declaration()
+            if (program[0] == True):
+                print("Compilado")
+            else:
+                print("Error en el codigo")
+            # for token in comments:
             #    print("Comentarios:", token)
         except EOFError:
             # Fin de la entrada
@@ -358,11 +366,12 @@ def analizar_archivo(nombre_archivo):
             contenido = file.read()
             tokens = analizador_lexico(contenido)
             print("Tokens:", tokens)
-            #print("Comentarios:", comments)
+            # print("Comentarios:", comments)
     except FileNotFoundError:
         print(f"El archivo '{nombre_archivo}' no se encontró.")
     except Exception as e:
         print("Error:", str(e))
+
 
 # Seccion declaration
 
@@ -1202,13 +1211,7 @@ def block():
         return [False, []]
 
 
-
 def main():
-    program = declaration()
-    if (program == True):
-        print("Compilado")
-    else:
-        print("Error en el codigo")
 
     if len(sys.argv) > 1:
         # Si se proporcionan argumentos, asumimos que son nombres de archivos para analizar
@@ -1219,6 +1222,7 @@ def main():
         analizar_cadena()
 
     return 0
+
 
 if __name__ == "__main__":
     main()
