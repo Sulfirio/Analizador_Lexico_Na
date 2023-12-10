@@ -340,7 +340,7 @@ def analizar_cadena():
     while True:
         try:
             cadena = input()
-            tokens, comments = analizador_lexico(cadena)
+            tokens = analizador_lexico(cadena)
             for token in tokens:
                 print("Tokens:", token)
             #for token in comments:
@@ -356,7 +356,7 @@ def analizar_archivo(nombre_archivo):
     try:
         with open(nombre_archivo, 'r') as file:
             contenido = file.read()
-            tokens, comments = analizador_lexico(contenido)
+            tokens = analizador_lexico(contenido)
             print("Tokens:", tokens)
             #print("Comentarios:", comments)
     except FileNotFoundError:
