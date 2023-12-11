@@ -88,7 +88,7 @@ def analizador_lexico(input_string):
     comment_start = -1
     char_to_token = {v: k for k, v in token_dict.items()}
     tuo = len(input_string)
-    print(tuo)
+    #print(tuo)
     while pos < len(input_string):
         char = input_string[pos]
         if state == S0:
