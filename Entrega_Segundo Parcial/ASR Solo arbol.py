@@ -411,9 +411,9 @@ def declaration():
         result2 = declaration()
         if (result2[0] == True):
             token.append(result2[1])
-            if(pos+1<len(Tokens)):
-                pos+=1
         #print([True, ["Declaration", token]])
+        if(pos+1<len(Tokens)):
+            pos+=1
         print(["Variable Declaration", token],"\n")
         return [True, ["Variable Declaration", token]]
     else:
@@ -564,7 +564,9 @@ def exprStm():
     result = Expression()
     if (result[0] == True):
         token.append(result[1])
-        #pos += 1
+        if(pos+1<len(Tokens)):
+            if(Tokens[pos+1][0]=="SEMICOLON"):
+                pos += 1
         if (Tokens[pos][0] == "SEMICOLON"):
             token.append(Tokens[pos][0])
             return [True,  token]
@@ -594,7 +596,7 @@ def forStm():
         result = forStm1()
         if (result[0] == True):
             token.append(result[1])
-            #print("EsTAMOS en", pos, "que tiene el valor:", Tokens[pos])
+            #print("Estamos en", pos, "que tiene el valor:", Tokens[pos])
             pos += 1
         else:
             return [False, []]
@@ -613,7 +615,6 @@ def forStm():
         if (result3[0] == True):
 
             token.append(result3[1])
-            #print("etos")
         else:
             pos += 1
         if (Tokens[pos][0] == "RIGHT_PAREN"):
@@ -645,11 +646,11 @@ def forStm1():
     if (result[0] == True):
         token.append(result[1])
         #print("aqui2")
-        return [True, ["ForStm1", token]]
+        return [True, token]
     elif (result2[0] == True):
         token.append(result2[1])
         #print("aqui2")
-        return [True, ["ForStm1", token]]
+        return [True, token]
     elif (Tokens[pos][0] == "SEMICOLON"):
         token.append(Tokens[pos][0])
         #print("aqui2")
@@ -689,7 +690,6 @@ def forStm3():
     #print("Estamos en forStm3")
     result = Expression()
     if (result[0] == True):
-        #print("EXITO")
         return [True, result[1]]
 
     return [False, []]
@@ -754,12 +754,14 @@ def ifStm():
         #print(result2)
         if (result2[0] == True):
             token.append(result2[1])
-            #print("PRUEBAAAAA\n")
             pos += 1
+            if(Tokens[pos][0]=="PRINT"):
+                #print("PRUEBAAAAA\n")
+                pos-=1
         else:
             return [False, []]
         result3 = elseStm()
-        if (result3 == True):
+        if (result3[0] == True):
             token.append(result3[1])
         return [True, token]
 
@@ -772,13 +774,13 @@ def elseStm():
     global Tokens
     if(pos>=len(Tokens)):
         return [False, []]
-    #print("Estamos en", pos, "que tiene el valor:", Tokens[pos])
-    #print("Estamos elseStm")
+    #print("\nEstamos en", pos, "que tiene el valor:", Tokens[pos])
+    #print("Estamos elseStm\n")
     token = []
     if (Tokens[pos][0] == "ELSE"):
         token.append(Tokens[pos][0])
         pos += 1
-        result = statement()
+        result = block()
         if (result[0] == True):
             token.append(result[1])
             return [True,  token]
@@ -929,7 +931,7 @@ def exprOr():
         result2 = exprOr2()
         if (result2[0] == True):
             token.append(result2[1])
-            print(["Expression Logic", token],"\n")
+            #print(["Expression Logic", token],"\n")
             return [True, ["Expression Logic", token]]
         else:
             return [True,  token]
@@ -981,7 +983,7 @@ def exprAnd():
         result2 = exprAnd2()
         if (result2[0] == True):
             token.append(result2[1])
-            print(["Expression Logic", token],"\n")
+            #print(["Expression Logic", token],"\n")
             return [True, ["Expression Logic", token]]
         else:
             return [True, token]
@@ -1032,7 +1034,7 @@ def exprEquality():
         result2 = exprEquality2()
         if (result2[0] == True):
             token.append(result2[1])
-            print(["Expression Binary", token], "\n")
+            #print(["Expression Binary", token], "\n")
             return [True, ["Expression Binary", token]]
         else:
             return [True, token]
@@ -1085,7 +1087,7 @@ def exprComp():
         result2 = exprComp2()
         if (result2[0] == True):
             token.append(result2[1])
-            print(["Expression Binary", token], "\n")
+            #print(["Expression Binary", token], "\n")
             return [True, token]
         else:
             return [True, token]
@@ -1140,7 +1142,7 @@ def exprTerm():
         result2 = term2()
         if (result2[0] == True):
             token.append(result2[1])
-            print(["Expression Binary", token], "\n")
+            #print(["Expression Binary", token], "\n")
             return [True,["Expression Binary", token]]
         else:
             return [True, token]
@@ -1176,6 +1178,9 @@ def term2():
         result2 = term2()
         if (result2[0] == True):
             token.append(result2[1])
+            if(pos+1<len(Tokens)):
+                if(Tokens[pos+1][0] == "SEMICOLON"):
+                    pos+=1
         return [True, token]
     else:
         return [False, []]
@@ -1190,16 +1195,10 @@ def factor():
     result = exprUnary()
     if (result[0] == True):
         token.append(result[1])
-
-        #if (Tokens[pos][0] != "EQUAL"):
-        #    pos += 1
-        #if(Tokens[pos-1][0] == "SLASH" or Tokens[pos-1][0] == "STAR" or Tokens[pos-1][0] == "MINUS" or Tokens[pos-1][0] == "PLUS" or Tokens[pos-1][0] == "BANG" or Tokens[pos-1][0] == "BANG_EQUAL" or Tokens[pos-1][0] == "EQUAL_EQUAL" or Tokens[pos-1][0] == "GREATER" or Tokens[pos-1][0] == "GREATER_EQUAL"  or Tokens[pos-1][0] == "LESS"  or Tokens[pos-1][0] == "LESS_EQUAL"):
-        #    pos-=1
-        #print("Estamos", pos)
         result2 = factor2()
         if (result2[0] == True):
             token.append(result2[1])
-            print(["Expression Binary", token], "\n")
+            #print(["Expression Binary", token], "\n")
             return [True, ["Expression Bynary", token]]
         else:
             return [True,token]
@@ -1268,18 +1267,18 @@ def exprUnary():
             cadena+= result[1][1][0][1][1]
             cadena+= "]]]"
             
-            print(cadena,"\n")
+            #print(cadena,"\n")
             return [True,["Expression Unary",token]]
         else:
             return [False, []]
     elif (Tokens[pos][0] == "TRUE" or Tokens[pos][0] == "FALSE" or Tokens[pos][0] == "NULL" or Tokens[pos][0] == "NUMBER" or
           Tokens[pos][0] == "STRING" or Tokens[pos][0] == "IDENTIFIER" or Tokens[pos][0] == "LEFT_PAREN"):
         result = exprCall()
-        token.append(result[1])
         if (result[0] == True):
+            token.append(result[1])
             #print([True, ["ExprUnary", token]])
             #print("posicion",pos)
-            print(["Expression Unary",token],"\n")
+            #print(["Expression Unary",token],"\n")
             return [True,["Expression Unary",token]]
     else:
         return [False, []]
@@ -1302,7 +1301,7 @@ def exprCall():
             result2 = exprCall2()
             if (result2[0] == True):
                 token.append(result2[1])
-                print(["Expression Call Function", token[0][1]],"\n")
+                #print(["Expression Call Function", token],"\n")
                 return [True, ["Expression Call Function", token]]
             else:
                 return [True,result[1]]
@@ -1317,6 +1316,10 @@ def exprCall():
 def exprCall2():
     global pos
     global Tokens
+    if(pos>=len(Tokens)):
+        return [False,[]]
+    if(Tokens[pos][0] == "SEMICOLON"):
+        return [False,[]]
     #print("Estamos en", pos, "que tiene el valor:", Tokens[pos])
     #print("Estamos en exprCall2")
     token = []
@@ -1329,6 +1332,8 @@ def exprCall2():
         result = argOpc()
         if (result[0] == True):
             token.append(result[1])
+            if(Tokens[pos][0] == "RIGHT_PAREN"):
+                pos-=1
             pos += 1
         if (Tokens[pos][0] == "RIGHT_PAREN"):
             token.append(Tokens[pos][0])
@@ -1354,11 +1359,11 @@ def exprPrimary():
             Tokens[pos][0] == "STRING" or Tokens[pos][0] == "IDENTIFIER"):
         #pos+=1
         if(Tokens[pos][0] == "TRUE" or Tokens[pos][0] == "FALSE" or Tokens[pos][0] == "NULL"):
-            print(["Expresion Literal", Tokens[pos]],"\n")
-            return [True, ["Expresion Literal", Tokens[pos]]]
+            #print(["Expression Literal", Tokens[pos]],"\n")
+            return [True, ["Expression Literal", Tokens[pos]]]
         if(Tokens[pos][0] == "NUMBER" or Tokens[pos][0] == "STRING"):
-            print(["Expresion Literal", Tokens[pos]],"\n")
-            return [True, ["Expresion Literal", Tokens[pos]]]
+            #print(["Expression Literal", Tokens[pos]],"\n")
+            return [True, ["Expression Literal", Tokens[pos]]]
         """
         if(Tokens[pos+1][0] == "LEFT_PAREN"):
             token.append(Tokens[pos])
@@ -1382,10 +1387,10 @@ def exprPrimary():
             return [True, ["Function call", token]]
         """
         if(Tokens[pos][0] == "IDENTIFIER"):
-            print(["Expresion Variable", Tokens[pos]],"\n")
-            return [True, ["Expresion Variable", Tokens[pos]]]
+            #print(["Expression Variable", Tokens[pos]],"\n")
+            return [True, ["Expression Variable", Tokens[pos]]]
     elif (Tokens[pos][0] == "LEFT_PAREN"):
-        #print("entramos al elif")
+        print("Entramos al elif")
         token.append(Tokens[pos][0])
         pos += 1
         result = Expression()
@@ -1394,7 +1399,7 @@ def exprPrimary():
             pos += 1
             if (Tokens[pos][0] == "RIGHT_PAREN"):
                 Tokens.append(Tokens[pos][0])
-                print(["Expression Grouping", token],"\n")
+                #print(["Expression Grouping", token],"\n")
                 return [True, ["Expression Grouping", token]]
             else:
                 return [False, []]
@@ -1416,9 +1421,11 @@ def argOpc():
         result2 = arguments()
         if (result2[0] == True):
             token.append(result2[1])
-            return [True, ["ArgOpc", token]]
+            if(Tokens[pos-1][0]  =="RIGHT_PAREN"):
+                pos-=1
+            return [True, ["Arguments", token]]
         else:
-            return [True, ["ArgOpc", token]]
+            return [True, ["Arguments", token]]
     else:
         return [False, []]
     return [False, []]
@@ -1430,6 +1437,8 @@ def arguments():
     #print("Estamos en", pos, "que tiene el valor:", Tokens[pos])
     #print("Estamos en arguments")
     token = []
+    if(Tokens[pos-1][0] == "COMMA"):
+        pos-=1
     if (Tokens[pos][0] == "COMMA"):
         token.append(Tokens[pos][0])
         pos += 1
@@ -1441,7 +1450,7 @@ def arguments():
         if (result2[0] == True):
             token.append(result2[1])
             pos += 1
-        return [True, ["Arguments", token]]
+        return [True,token]
     else:
         return [False, []]
 
@@ -1455,7 +1464,7 @@ def funct():
     #print("Estamos en funct")
     token = []
     if (Tokens[pos][0] == "IDENTIFIER"):
-        token.append(Tokens[pos][0])
+        token.append(Tokens[pos])
         pos += 1
 
         if (Tokens[pos][0] == "LEFT_PAREN"):
@@ -1478,7 +1487,7 @@ def funct():
         if (result2[0] == True):
             token.append(result2[1])
             pos += 1
-            return [True, ["Function", token]]
+            return [True,token]
         else:
             return [False, []]
     else:
@@ -1496,7 +1505,7 @@ def paramOpc():
     result = parameters()
     if (result[0] == True):
         token.append(result[1])
-        return [True, ["ParametersOpc", token]]
+        return [True,  token]
     else:
         return [False, []]
 
@@ -1543,7 +1552,7 @@ def parameters2():
         #else:
             #print("\nprueba")
             #return [False, []]
-        return [True, ["Parameters_2", token]]
+        return [True,  token]
 
     else:
         #print("\nprueba2")
